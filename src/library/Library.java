@@ -25,7 +25,8 @@ public class Library implements Iterable<Book> {
 		alBooks.add(book);
 	}
 	
-	public Book getBook(int i) {
+	public Book getBook(int i) throws IndexOutOfBoundsException {
+		if(i >= alBooks.size()) throw new IndexOutOfBoundsException("Livro inexistente. Verifique os dados e tente novamente!");
 		return alBooks.get(i);
 	}
 	
