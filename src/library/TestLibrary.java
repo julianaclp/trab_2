@@ -7,11 +7,11 @@ public class TestLibrary {
 		l.addBook(new Book("Pet Sematary"));
 		l.addBook(new Book("Good Omens"));
 		l.addBook(new Book("The Shining"));
-		System.out.println(new LoanEntry(LoanEntry.BORROW, l.getBook(2)).borrowBook("juliana"));
-		System.out.println(new LoanEntry(LoanEntry.BORROW, l.getBook(2)).borrowBook( "juliana"));
-		System.out.println(new LoanEntry(LoanEntry.RETURN, l.getBook(2)).returnBook());
-		System.out.println(new LoanEntry(LoanEntry.RETURN, l.getBook(2)).returnBook());
-		System.out.println(new LoanEntry(LoanEntry.BORROW, l.getBook(4)).borrowBook("juliana"));
+		System.out.println(l.printLibrary());
+//		System.out.println(l.searchBook(4));
+		System.out.println(new Loan(l.getBook(2)).borrowBook("juliana", 10, 6, 2019));
+		System.out.println(new Loan(l.getBook(2)).borrowBook("juliana", 10, 6, 2019));
+
 		//System.out.println(l.printLibrary());
 
 	}

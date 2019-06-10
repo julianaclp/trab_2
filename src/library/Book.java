@@ -7,8 +7,6 @@ public class Book implements Comparable<Book> {
 	private int acquisitionYear;
 	private float price;
 	private String author;
-	private int edition;
-	private enum type {LITERATURE, ACADEMIC};
 	private boolean status;
 	final static boolean BORROWED = true;
 	final static boolean AVAILABLE = false;
@@ -64,14 +62,6 @@ public class Book implements Comparable<Book> {
 
 	public void setAuthor(String author) {
 		this.author = author;
-	}
-
-	public int getEdition() {
-		return edition;
-	}
-
-	public void setEdition(int edition) {
-		this.edition = edition;
 	}
 	
 	public void setStatus(boolean status) {

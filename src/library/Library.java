@@ -2,10 +2,8 @@ package library;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Library implements Iterable<Book> {
 	private ArrayList<Book> alBooks = null;
@@ -52,21 +50,17 @@ public class Library implements Iterable<Book> {
 		return lib;
 	}
 	
-	public JSONObject searchBook(int id) {
-		JSONObject response = new JSONObject();
+	public HashMap<String, Object> searchBook(int id) {
+		HashMap<String, Object> response = new HashMap<String, Object>();
 		for(Book b : alBooks) {
 			if(b.getId() == id) {
-				try {
-			        response.put("exists", true);
+				response.put("exists", true);
 			        response.put("book", b);
-			    } catch (JSONException e) {}  
 			};
 		}
-		if(response.length() == 0) {
-			try {
-				response.put("exists", new Boolean(false));
-				response.put("message", "Livro inexistente");
-			} catch (JSONException e) {}
+		if(response.size() == 0) {
+			response.put("exists", false);
+			response.put("message", "Livro inexistente");
 		}
 		return response;
 	}
