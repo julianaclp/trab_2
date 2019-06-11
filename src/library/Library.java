@@ -64,6 +64,32 @@ public class Library implements Iterable<Book> {
 		}
 		return response;
 	}
+	
+	public int getSize() {
+		return alBooks.size();
+	}
+	
+	public int getAtHomeBooks() {
+		int n = 0;
+		for (Book b : alBooks) {
+			if(b.getStatus() == Book.AVAILABLE) n++;
+		}
+		return n;
+	}
+	
+	public int getBorrowedBooks() {
+		int n = 0;
+		for (Book b : alBooks) {
+			if(b.getStatus() == Book.BORROWED) n++;
+		}
+		return n;
+	}
+	
+	public float getLibraryPrice() {
+		float n = 0;
+		for(Book b : alBooks) n += b.getPrice();
+		return n;
+	}
 
 	@Override
 	public Iterator<Book> iterator() {

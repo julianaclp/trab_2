@@ -38,6 +38,7 @@ public class Main {
 				break;
 			case 4:
 				System.out.println("Listar");
+				listBooks(lib);
 				pressToContinue();
 				break;
 			case 5:
@@ -46,6 +47,7 @@ public class Main {
 				break;
 			case 6:
 				System.out.println("Estatísticas");
+				statBooks(lib);
 				pressToContinue();
 				break;
 			case 7:
@@ -227,4 +229,25 @@ public class Main {
 		}
 	}
 
+	public static void listBooks(Library lib) {
+		System.out.println("1 - Listar livros de um determinado ano");
+		System.out.println("2 - Listar livros em ordem alfabética");
+		System.out.println("3 - Listar livros que estão emprestados");
+		System.out.println("4 - Listar livros por tipo");
+	}
+	
+	public static void statBooks(Library lib) {
+		System.out.println("ESTATÍSTICAS");
+		System.out.println("Quantidade total de livros:");
+		System.out.println(lib.getSize());
+		System.out.println("Quantidade de livros em casa:");
+		System.out.println(lib.getAtHomeBooks());
+		System.out.println("Quantidade de livros por categoria");
+		System.out.println("Literários: ");
+		System.out.println("Acadêmicos: ");
+		System.out.println("Quantidade de livros emprestados:");
+		System.out.println(lib.getBorrowedBooks());
+		System.out.println("Valor investido na biblioteca:");
+		System.out.println(lib.getLibraryPrice());
+	}
 }
