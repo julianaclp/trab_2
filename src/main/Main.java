@@ -1,4 +1,5 @@
 package main;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import library.*;
@@ -6,10 +7,15 @@ import library.*;
 public class Main {
 
 	private static Scanner k = new Scanner(System.in);
+	private static Common c = new Common();
 	
 	public static void main(String[] args) {
 		int opt;
 		Library lib = Library.getInstance();
+		lib.addBook(new Book("Pet Sematary"));
+		lib.addBook(new Book("Good Omens"));
+		lib.addBook(new Book("The Shining"));
+		Loan loans = Loan.getInstance();
 		do {
 			menu();
 			System.out.print("\nOpcao: ");
@@ -22,10 +28,12 @@ public class Main {
 				break;
 			case 2:
 				System.out.println("Emprestar");
+				borrowBook(lib, loans);
 				pressToContinue();
 				break;
 			case 3:
 				System.out.println("Devolver");
+				returnBook(lib, loans);
 				pressToContinue();
 				break;
 			case 4:
@@ -111,6 +119,7 @@ public class Main {
 				continue;
 			}
 		}
+		b.setReleaseYear(releaseYear);
 		while(true) {
 			try {
 				System.out.println("Digite o ano de aquisição do livro");
@@ -136,6 +145,86 @@ public class Main {
 		}
 		b.setPrice(price);
 		l.addBook(b);
+	}
+
+	public static void borrowBook(Library lib, Loan l) {
+		Scanner k = new Scanner(System.in);
+		int bookId;
+		Book book;
+		String person;
+		LoanEntry entry;
+		HashMap<String, Object> result;
+		while(true) {
+			try {
+				System.out.println("Digite o nome da pessoa que está emprestando o livro");
+				person = c.isStringValid(k.nextLine());
+				break;
+			} catch (Exception e) {
+				System.out.println("Digite um nome válido");
+				continue;
+			}
+		}
+		while(true) {
+			try {
+				System.out.println("Digite a ID do livro que deseja emprestar: ");
+				bookId = k.nextInt();
+				result = lib.searchBook(bookId);
+				if((boolean) result.get("exists") == false) {
+					System.out.println(result.get("message"));
+					continue;
+				}
+				book = (Book) result.get("book");
+				entry = new LoanEntry(book);
+				result = entry.borrowBook(person);
+				if((boolean) result.get("success") == false) {
+					System.out.println(result.get("message"));
+					continue;
+				}
+				else System.out.println(result.get("message"));
+				l.newEntry(new LoanEntry(book));
+				break;
+			} catch (Exception e) {
+				System.out.println("Digite um número inteiro");
+				k.next();
+				continue;
+			}
+		}
+	}
+	
+	public static void returnBook(Library lib, Loan l) {
+		int bookId;
+		HashMap<String, Object> result;
+		Book book;
+		LoanEntry entry;
+		while(true) {
+			try {
+				System.out.println("Digite a ID do livro que deseja devolver: ");
+				bookId = k.nextInt();
+				result = lib.searchBook(bookId);
+				if((boolean) result.get("exists") == false) {
+					System.out.println(result.get("message"));
+					continue;
+				}
+				book = (Book) result.get("book");
+				result = l.getActiveEntry(book);
+				if((boolean) result.get("success") == false) {
+					System.out.println(result.get("data"));
+					break;
+				}
+				entry = (LoanEntry) result.get("data");
+				result = entry.returnBook();
+				if((boolean) result.get("success") == false) {
+					System.out.println(result.get("message"));
+					continue;
+				}
+				System.out.println(result.get("message"));
+				break;
+			} catch (Exception e) {
+				System.out.println("Digite um número inteiro");
+				k.next();
+				continue;
+			}
+		}
 	}
 
 }

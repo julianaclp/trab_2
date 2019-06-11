@@ -55,7 +55,7 @@ public class Library implements Iterable<Book> {
 		for(Book b : alBooks) {
 			if(b.getId() == id) {
 				response.put("exists", true);
-			        response.put("book", b);
+			    response.put("book", b);
 			};
 		}
 		if(response.size() == 0) {

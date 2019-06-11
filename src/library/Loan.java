@@ -1,56 +1,43 @@
 package library;
 
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
-public class Loan {
-	private GregorianCalendar borrowDate;
-	private GregorianCalendar returnDate;
-	private Book book;
-	private String person;
-	final static int BORROW = 1;
-	final static int RETURN = 2;
+public class Loan implements Iterable<LoanEntry> {
+	private ArrayList<LoanEntry> alLoan = null;
+	private static Loan myLoans;
 	
-	public Loan(Book book) {
-		this.book = book;
+	public static Loan getInstance() {
+		if(myLoans == null) myLoans = new Loan();
+		return myLoans;
 	}
 	
-	public HashMap<String, Object> borrowBook(String person, int day, int month, int year) {
-		HashMap<String, Object> response = new HashMap<String, Object>();
-		this.person = person;
-		if(book.getStatus() == Book.BORROWED) {
-			response.put("success", false);
-			response.put("message", "Livro já está emprestado.");
-			return response;
+	private Loan() {
+		alLoan = new ArrayList<LoanEntry>();
+	}
+	
+	public void newEntry(LoanEntry loan) {
+		alLoan.add(loan);
+	}
+	
+	public HashMap<String, Object> getActiveEntry(Book book) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		for (LoanEntry l : alLoan) {
+			if(l.getBook().getId() == book.getId() && l.getDate(LoanEntry.RETURN).equals("NULL")) {
+				result.put("success", true);
+				result.put("data", l);
+				return result;
+			}
 		}
-		book.setStatus(Book.BORROWED);
-		borrowDate = new GregorianCalendar(year, month - 1, day);
-		response.put("success", true);
-		response.put("message", "Livro emprestado com sucesso!");
-		return response;
+		result.put("success", false);
+		result.put("data", "Não existe empréstimo para esse livro");
+		return result;
 	}
 	
-	public HashMap<String, Object> returnBook(String person, int day, int month, int year) {
-		HashMap<String, Object> response = new HashMap<String, Object>();
-		if(book.getStatus() == Book.AVAILABLE) {
-			response.put("success", false);
-			response.put("message", "Livro ainda não foi emprestado. Verifique os dados e tente novamente!");
-			return response;
-		}
-		book.setStatus(Book.AVAILABLE);
-		returnDate = new GregorianCalendar(year, month - 1, day);
-		response.put("success", true);
-		response.put("message", "Livro devolvido com sucesso!");
-		return response;
+	@Override
+	public Iterator<LoanEntry> iterator() {
+		return alLoan.iterator();
 	}
-	
-	public String getDate(int action) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		if(action == BORROW && borrowDate != null) return format.format(borrowDate);
-		if(action == RETURN && returnDate != null) return format.format(returnDate);
-		return "Ocorreu um erro";
-	}
-	
-	
+
 }
