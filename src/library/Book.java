@@ -15,6 +15,14 @@ public class Book implements Comparable<Book> {
 		super();
 		this.title = title;
 	}
+	
+	public Book(String title, String author, int releaseYear, int acquisitionYear, float price) {
+		this.title = title;
+		this.author = author;
+		this.releaseYear = releaseYear;
+		this.acquisitionYear = acquisitionYear;
+		this.price = price;
+	}
 
 	public int getId() {
 		return id;
@@ -79,7 +87,11 @@ public class Book implements Comparable<Book> {
 	}
 	
 	public String toString() {
-		return title;
+		return title + " - " + author;
+	}
+	
+	public String getFullInfo() {
+		return title + " - " + author + " - " + releaseYear + " - " + acquisitionYear + " - " + price + "\n";
 	}
 	
 

@@ -50,6 +50,15 @@ public class Library implements Iterable<Book> {
 		return lib;
 	}
 	
+	public String listByYear(int year) {
+		String result = "";
+		for (Book b : alBooks) {
+			if(b.getReleaseYear() == year) result += b;
+		}
+		if(result.length() == 0) result = "Não há livros lançados nesse ano.";
+		return result;
+	}
+	
 	public HashMap<String, Object> searchBook(int id) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		for(Book b : alBooks) {
