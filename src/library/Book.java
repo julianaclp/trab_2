@@ -1,6 +1,10 @@
 package library;
 
 public class Book implements Comparable<Book> {
+	public enum Type {
+		ACADEMIC,
+		LITERARY;
+	}
 	private int id;
 	private String title;
 	private int releaseYear;
@@ -10,10 +14,12 @@ public class Book implements Comparable<Book> {
 	private boolean status;
 	final static boolean BORROWED = true;
 	final static boolean AVAILABLE = false;
+	Type type;
 	
-	public Book(String title) {
+	public Book(String title, Type type) {
 		super();
 		this.title = title;
+		this.type = type;
 	}
 	
 	public Book(String title, String author, int releaseYear, int acquisitionYear, float price) {
@@ -78,6 +84,15 @@ public class Book implements Comparable<Book> {
 	
 	public boolean getStatus() {
 		return status;
+	}
+	
+	public void setType(Type type) {
+		this.type = type;
+	}
+	
+	public String getType() {
+		if(type == Type.ACADEMIC) return "Acadêmico";
+		return "Literário";
 	}
 	
 	public int compareTo(Book b) {

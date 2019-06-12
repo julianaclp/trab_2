@@ -2,20 +2,25 @@ package library;
 
 public class TestLibrary {
 
-	public static void main(String[] args) {
-		Library l = Library.getInstance();
-		Loan loans = Loan.getInstance();
-		l.addBook(new Book("Pet Sematary"));
-		l.addBook(new Book("Good Omens"));
-		l.addBook(new Book("The Shining"));
-		System.out.println(l.printLibrary());
-//		System.out.println(l.searchBook(4));
-		loans.newEntry(new LoanEntry(l.getBook(2)));
-		//System.out.println(new LoanEntry(l.getBook(2)).borrowBook("juliana", 10, 6, 2019));
-		//System.out.println(new LoanEntry(l.getBook(2)).borrowBook("juliana", 10, 6, 2019));
+	public enum Currency {
+        PENNY(1), NICKLE(5), DIME(10), QUARTER(25);
+        private int value;
 
-		//System.out.println(l.printLibrary());
-
+        private Currency(int value) {
+                this.value = value;
+        }
+        
+        public int getPrice() {
+        	return value;
+        }
 	}
+
+  
+    // Driver method 
+    public static void main(String[] args) 
+    { 
+    	
+        System.out.println(Currency.NICKLE.getPrice()); 
+    } 
 
 }

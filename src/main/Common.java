@@ -3,14 +3,14 @@ package main;
 import java.util.Scanner;
 
 public class Common {
-	public String isStringValid(String s) 
+	public static String isStringValid(String s) 
     { 
         if (s == null || s.length() == 0) 
             throw new IllegalArgumentException("The argument cannot be null"); 
         return s;
     } 
 	
-	public int isNumberValidLoop(Scanner k, String message) {
+	public static int isNumberValidLoop(Scanner k, String message) {
 		int n;
 		while(true) {
 			try {
@@ -26,7 +26,7 @@ public class Common {
 		return n;
 	}
 	
-	public float isFloatValidLoop(Scanner k, String message) {
+	public static float isFloatValidLoop(Scanner k, String message) {
 		float n;
 		while(true) {
 			try {
@@ -42,7 +42,7 @@ public class Common {
 		return n;
 	}
 	
-	public String isStringValidLoop(Scanner k, String message) {
+	public static String isStringValidLoop(Scanner k, String message) {
 		String result = "";
 		while(true) {
 			try {

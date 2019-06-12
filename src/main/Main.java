@@ -7,7 +7,6 @@ import library.*;
 public class Main {
 
 	private static Scanner k = new Scanner(System.in);
-	private static Common c = new Common();
 	
 	public static void main(String[] args) {
 		int opt;
@@ -92,86 +91,66 @@ public class Main {
 	}
 	
 	public static void addBook(Library l) {
-		Common c = new Common();
 		Scanner k = new Scanner(System.in);
 		Book b;
-		b = new Book(c.isStringValidLoop(k, "Digite o título do livro"));
-		b.setAuthor(c.isStringValidLoop(k, "Digite o autor do livro"));
-		b.setReleaseYear(c.isNumberValidLoop(k, "Digite o ano de lançamento do livro:"));
-		b.setAcquisitionYear(c.isNumberValidLoop(k, "Digite o ano de aquisição do livro:"));
-		b.setPrice(c.isFloatValidLoop(k, "Digite o valor de aquisição do livro"));
+		int type; 
+		while(true) {
+			type = Common.isNumberValidLoop(k, "Digite o tipo do livro: \n 1 - Acadêmico \n 2 - Literário");
+			if(type == 1 || type == 2) break;
+			continue;
+		}
+		k.nextLine();
+		b = new Book(Common.isStringValidLoop(k, "Digite o título do livro"), type == 1 ? Book.Type.ACADEMIC : Book.Type.LITERARY);
+		b.setAuthor(Common.isStringValidLoop(k, "Digite o autor do livro"));
+		b.setReleaseYear(Common.isNumberValidLoop(k, "Digite o ano de lançamento do livro:"));
+		b.setAcquisitionYear(Common.isNumberValidLoop(k, "Digite o ano de aquisição do livro:"));
+		b.setPrice(Common.isFloatValidLoop(k, "Digite o valor de aquisição do livro"));
 		l.addBook(b);
 	}
 
 	public static void borrowBook(Library lib, Loan l) {
 		Scanner k = new Scanner(System.in);
-		int bookId;
-		Book book;
 		String person;
 		LoanEntry entry;
 		HashMap<String, Object> result;
-		person = c.isStringValidLoop(k, "Digite o nome da pessoa que está emprestando o livro");
-		while(true) {
-			try {
-				System.out.println("Digite a ID do livro que deseja emprestar: ");
-				bookId = k.nextInt();
-				result = lib.searchBook(bookId);
-				if((boolean) result.get("exists") == false) {
-					System.out.println(result.get("message"));
-					continue;
-				}
-				book = (Book) result.get("book");
-				entry = new LoanEntry(book);
-				result = entry.borrowBook(person);
-				if((boolean) result.get("success") == false) {
-					System.out.println(result.get("message"));
-					continue;
-				}
-				else System.out.println(result.get("message"));
-				l.newEntry(new LoanEntry(book));
-				break;
-			} catch (Exception e) {
-				System.out.println("Digite um número inteiro");
-				k.next();
-				continue;
-			}
+		person = Common.isStringValidLoop(k, "Digite o nome da pessoa que está emprestando o livro");
+		result = lib.searchBook(Common.isNumberValidLoop(k, "Digite a ID do livro que deseja emprestar: "));
+		if((boolean) result.get("exists") == false) {
+			System.out.println(result.get("message"));
+			return;
+		} 
+		entry = new LoanEntry((Book) result.get("book"));
+		result = entry.borrowBook(person);
+		if((boolean) result.get("success") == false) {
+			System.out.println(result.get("message"));
+			return;
 		}
+		System.out.println(result.get("message"));
+		l.newEntry(entry);
+		return;
 	}
 	
 	public static void returnBook(Library lib, Loan l) {
-		int bookId;
 		HashMap<String, Object> result;
-		Book book;
 		LoanEntry entry;
-		while(true) {
-			try {
-				System.out.println("Digite a ID do livro que deseja devolver: ");
-				bookId = k.nextInt();
-				result = lib.searchBook(bookId);
-				if((boolean) result.get("exists") == false) {
-					System.out.println(result.get("message"));
-					continue;
-				}
-				book = (Book) result.get("book");
-				result = l.getActiveEntry(book);
-				if((boolean) result.get("success") == false) {
-					System.out.println(result.get("data"));
-					break;
-				}
-				entry = (LoanEntry) result.get("data");
-				result = entry.returnBook();
-				if((boolean) result.get("success") == false) {
-					System.out.println(result.get("message"));
-					continue;
-				}
-				System.out.println(result.get("message"));
-				break;
-			} catch (Exception e) {
-				System.out.println("Digite um número inteiro");
-				k.next();
-				continue;
-			}
+		result = lib.searchBook(Common.isNumberValidLoop(k, "Digite a ID do livro que deseja devolver: "));
+		if((boolean) result.get("exists") == false) {
+			System.out.println(result.get("message"));
+			return;
 		}
+		result = l.getActiveEntry((Book) result.get("book"));
+		if((boolean) result.get("success") == false) {
+			System.out.println(result.get("data"));
+			return;
+		}
+		entry = (LoanEntry) result.get("data");
+		result = entry.returnBook();
+		if((boolean) result.get("success") == false) {
+			System.out.println(result.get("message"));
+			return;
+		}
+		System.out.println(result.get("message"));
+		return;
 	}
 
 	public static void listBooks(Library lib) {
@@ -186,7 +165,7 @@ public class Main {
 				opt = k.nextInt();
 				switch(opt) {
 				case 1:
-					int year = c.isNumberValidLoop(k, "Digite o ano de lançamento do livro");
+					int year = Common.isNumberValidLoop(k, "Digite o ano de lançamento do livro");
 					System.out.println(lib.listByYear(year));
 					break;
 				case 2:
