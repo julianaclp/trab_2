@@ -13,16 +13,19 @@ public class Main {
 		Library lib = Library.getInstance();
 		lib.addBook(new Book("Pet Sematary",
 				"Stephen King",
+				Book.Type.LITERARY,
 				1983,
 				2018,
 				(float) 25.50));
 		lib.addBook(new Book("Good Omens",
 				"Neil Gaiman", 
+				Book.Type.ACADEMIC,
 				1990,
 				2019, 
 				(float) 30));
 		lib.addBook(new Book("The Shining",
 				"Stephen King",
+				Book.Type.LITERARY,
 				1977,
 				2010, 
 				(float) 31.50));
@@ -54,6 +57,7 @@ public class Main {
 				break;
 			case 5:
 				System.out.println("Excluir");
+				removeBook(lib);
 				pressToContinue();
 				break;
 			case 6:
@@ -106,6 +110,7 @@ public class Main {
 		b.setAcquisitionYear(Common.isNumberValidLoop(k, "Digite o ano de aquisição do livro:"));
 		b.setPrice(Common.isFloatValidLoop(k, "Digite o valor de aquisição do livro"));
 		l.addBook(b);
+		System.out.println(l.printLibrary());;
 	}
 
 	public static void borrowBook(Library lib, Loan l) {
@@ -157,9 +162,11 @@ public class Main {
 		Scanner k = new Scanner(System.in);
 		int opt = 0;
 		System.out.println("1 - Listar livros de um determinado ano");
-		System.out.println("2 - Listar livros em ordem alfabética");
-		System.out.println("3 - Listar livros que estão emprestados");
-		System.out.println("4 - Listar livros por tipo");
+		System.out.println("2 - Listar livros em ordem A-Z");
+		System.out.println("3 - Listar livros em ordem Z-A");
+		System.out.println("4 - Listar livros que estão emprestados");
+		System.out.println("5 - Listar livros por tipo");
+		System.out.println("6 - Listar histórico de empréstimos");
 		do {
 			try {
 				opt = k.nextInt();
@@ -169,10 +176,19 @@ public class Main {
 					System.out.println(lib.listByYear(year));
 					break;
 				case 2:
+					lib.orderByAZ();
+					System.out.println(lib.printLibrary());
 					break;
 				case 3:
-					break;
+					lib.orderByZA();
+					System.out.println(lib.printLibrary());
 				case 4:
+					System.out.println(lib.getBorrowedBooks());
+					break;
+				case 5:
+					System.out.println(lib.getBooksByType());
+					break;
+				case 6:
 					break;
 				}
 				break;
@@ -181,21 +197,20 @@ public class Main {
 				k.next();
 				continue;
 			}
-		} while(opt < 1 || opt > 4);
+		} while(opt < 1 || opt > 5);
 	}
 	
 	public static void statBooks(Library lib) {
-		System.out.println("ESTATÍSTICAS");
-		System.out.println("Quantidade total de livros:");
-		System.out.println(lib.getSize());
-		System.out.println("Quantidade de livros em casa:");
-		System.out.println(lib.getAtHomeBooks());
-		System.out.println("Quantidade de livros por categoria");
-		System.out.println("Literários: ");
-		System.out.println("Acadêmicos: ");
-		System.out.println("Quantidade de livros emprestados:");
-		System.out.println(lib.getBorrowedBooks());
-		System.out.println("Valor investido na biblioteca:");
-		System.out.println(lib.getLibraryPrice());
+		System.out.println(lib.getStats());
+	}
+
+	public static void removeBook(Library lib) {
+		HashMap<String, Object> result = lib.searchBook(Common.isNumberValidLoop(k, "Digite a ID do livro que deseja excluir: "));
+		if((boolean) result.get("exists") == false) {
+			System.out.println("Livro inexistente. Não foi possível excluir.");
+			return;
+		}
+		lib.removeBook((Book) result.get("book"));
+		System.out.println(lib.printLibrary());
 	}
 }

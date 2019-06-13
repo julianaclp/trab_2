@@ -22,12 +22,13 @@ public class Book implements Comparable<Book> {
 		this.type = type;
 	}
 	
-	public Book(String title, String author, int releaseYear, int acquisitionYear, float price) {
+	public Book(String title, String author, Type type, int releaseYear, int acquisitionYear, float price) {
 		this.title = title;
 		this.author = author;
 		this.releaseYear = releaseYear;
 		this.acquisitionYear = acquisitionYear;
 		this.price = price;
+		this.type = type;
 	}
 
 	public int getId() {
@@ -90,19 +91,27 @@ public class Book implements Comparable<Book> {
 		this.type = type;
 	}
 	
-	public String getType() {
+	public String getStringType() {
 		if(type == Type.ACADEMIC) return "Acadêmico";
 		return "Literário";
 	}
 	
-	public int compareTo(Book b) {
+	public Type getType() {
+		return type;
+	}
+	
+	/*public int compareTo(Book b) {
 		Integer id1 = (Integer) this.id;
 		Integer id2 = (Integer) b.id;
 		return id1.compareTo(id2);
+	}*/
+	
+	public int compareTo(Book b) {
+		return this.title.compareToIgnoreCase(b.title);
 	}
 	
 	public String toString() {
-		return title + " - " + author;
+		return title + " - " + author + " (ID = " + id + ")";
 	}
 	
 	public String getFullInfo() {
