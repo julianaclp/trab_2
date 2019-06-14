@@ -9,8 +9,10 @@ public class Main implements Helper {
 	private static Scanner k = new Scanner(System.in);
 	
 	public static void main(String[] args) { 
+		//Aqui o usuário vai escolher as ações que quer realizar
+		//Em todos os casos são chamados métodos estáticos dentro da própria main
 		int opt; 
-		Library lib = Library.getInstance();
+		Library lib = Library.getInstance(); //Library salva as informações da biblioteca 
 		lib.addBook(new Book("Pet Sematary",
 				"Stephen King",
 				Book.Type.LITERARY,
@@ -29,7 +31,7 @@ public class Main implements Helper {
 				1977,
 				2010, 
 				(float) 31.50));
-		Loan loans = Loan.getInstance();
+		Loan loans = Loan.getInstance(); //Loan salva as informações dos empréstimos
 		do {
 			menu();
 			System.out.print("\nOpcao: ");
@@ -77,6 +79,9 @@ public class Main implements Helper {
 
 	}
 	
+	//os métodos da interface helper são utilizadas para verificar e tratar exceções para os diferentes casos
+	//como números, datas e strings válidas
+	
 	public static void menu() {
 		System.out.println("-----Menu-----");
 		System.out.println("1 - Adicionar livro");
@@ -94,7 +99,8 @@ public class Main implements Helper {
 		k.nextLine();
 	}
 	
-	public static void addBook(Library l) {
+	public static void addBook(Library l) { 
+		//Adiciona um livro na biblioteca 
 		Scanner k = new Scanner(System.in);
 		Book b;
 		int type; 
@@ -110,21 +116,23 @@ public class Main implements Helper {
 		b.setAcquisitionYear(Helper.isNumberValidLoop(k, "Digite o ano de aquisição do livro:"));
 		b.setPrice(Helper.isFloatValidLoop(k, "Digite o valor de aquisição do livro"));
 		l.addBook(b);
-		System.out.println(l.printLibrary());;
 	}
 
 	public static void borrowBook(Library lib, Loan l) {
+		//Empresta um livro. A variável result vai receber diferentes resultados de validação
 		Scanner k = new Scanner(System.in);
 		String person;
 		LoanEntry entry;
 		HashMap<String, Object> result;
 		person = Helper.isStringValidLoop(k, "Digite o nome da pessoa que está emprestando o livro");
+		//Inicialmente ela recebe o resultado da pesquisa de um livro
 		result = lib.searchBook(Helper.isNumberValidLoop(k, "Digite a ID do livro que deseja emprestar: "));
 		if((boolean) result.get("exists") == false) {
 			System.out.println(result.get("message"));
 			return;
 		} 
 		entry = new LoanEntry((Book) result.get("book"));
+		//E depois recebe o resultado da tentativa de empréstimo de um livro
 		result = entry.borrowBook(person);
 		if((boolean) result.get("success") == false) {
 			System.out.println(result.get("message"));
@@ -137,19 +145,23 @@ public class Main implements Helper {
 	}
 	
 	public static void returnBook(Library lib, Loan l) {
+		//Igualmente ao método de empréstimo, a variável result vai receber retornos de algumas funções 
 		HashMap<String, Object> result;
 		LoanEntry entry;
+		//Inicialmente recebe o retorno da pesquisa de um livro
 		result = lib.searchBook(Helper.isNumberValidLoop(k, "Digite a ID do livro que deseja devolver: "));
 		if((boolean) result.get("exists") == false) {
 			System.out.println(result.get("message"));
 			return;
 		}
+		//Então recebe o resultado do empréstimo em aberto
 		result = l.getActiveEntry((Book) result.get("book"));
 		if((boolean) result.get("success") == false) {
 			System.out.println(result.get("data"));
 			return;
 		}
 		entry = (LoanEntry) result.get("data");
+		//E finalmente recebe o resultado da tentativa de devolução do livro
 		result = entry.returnBook();
 		if((boolean) result.get("success") == false) {
 			System.out.println(result.get("message"));

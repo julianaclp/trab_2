@@ -20,7 +20,7 @@ public class Library implements Iterable<Book> {
 	}
 	
 	public void addBook(Book book) {
-		book.setId(idGenerator());
+		book.setId(idGenerator()); //adiciona um livro à biblioteca e gera uma ID nova para o mesmo
 		alBooks.add(book);
 	}
 	
@@ -44,6 +44,9 @@ public class Library implements Iterable<Book> {
 	}*/
 	
 	private int idGenerator() {
+		//Método que gera uma ID para um livro
+		//lastId é um atributo que vai salvar qual foi a última ID salva
+		//Dessa forma, mesmo que o livro com maior ID seja deletado, o próximo livro adicionado ainda vai ser adicionado com a ID correta
 		if(alBooks.size() == 0) lastId = 1;
 		else lastId++;
 		return lastId;
@@ -67,6 +70,10 @@ public class Library implements Iterable<Book> {
 	}
 	
 	public HashMap<String, Object> searchBook(int id) {
+		//Procura um livro baseado na ID
+		//OPÇÕES DE RETORNO
+		//result{"exists" : true, "book" : objeto livro} caso o livro exista
+		//result{"exists" : false, "message" : mensagem de erro} caso o livro não exista
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		for(Book b : alBooks) {
 			if(b.getId() == id) {

@@ -18,6 +18,10 @@ public class LoanEntry {
 	}
 	
 	public HashMap<String, Object> borrowBook(String person) {
+		//Método que realiza o empréstimo de um livro
+		//OPÇÕES DE RETORNO
+		//result{"success" : true, "message" : mensagem de sucesso} caso o livro esteja disponível para empréstimo
+		//result{"success" : false, "message" : mensagem de erro} caso o livro não esteja disponível para empréstimo
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		this.person = person;
 		if(book.getStatus() == Book.BORROWED) {
@@ -32,6 +36,10 @@ public class LoanEntry {
 	}
 	
 	public HashMap<String, Object> returnBook() {
+		//Método que realiza a devolução de um livro
+		//OPÇÕES DE RETORNO
+		//result{"success" : true, "message" : mensagem de sucesso} caso o livro esteja tenha sido devolvido com sucesso
+		//result{"success" : false, "message" : mensagem de erro} caso o usuário tente devolver um livro que não está emprestado
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		if(book.getStatus() == Book.AVAILABLE) {
 			response.put("success", false);
@@ -39,7 +47,7 @@ public class LoanEntry {
 			return response;
 		}
 		book.setStatus(Book.AVAILABLE);
-		setDate(new GregorianCalendar(), RETURN);
+		setDate(new GregorianCalendar(), RETURN); //coloca a data de devolução como sendo a data de hoje
 		response.put("success", true);
 		response.put("message", "Livro devolvido com sucesso!");
 		return response;

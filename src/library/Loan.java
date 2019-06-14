@@ -22,6 +22,10 @@ public class Loan implements Iterable<LoanEntry> {
 	}
 	
 	public HashMap<String, Object> getActiveEntry(Book book) {
+		//Método responsável por pegar o empréstimo em aberto
+		//Opções de retorno:
+		//result{"success" : true; "data" : dados do empréstimo} caso o empréstimo exista
+		//result{"success" : false; "message" : mensagem de erro} caso o empréstimo não exista
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		for (LoanEntry l : alLoan) {
 			if(l.getBook().getId() == book.getId() && l.getDate(LoanEntry.RETURN).equals("--")) {
@@ -36,6 +40,7 @@ public class Loan implements Iterable<LoanEntry> {
 	}
 	
 	public String getHistory(Book book) {
+		//Pega o histórico de empréstimos de um livro e retorna uma String
 		String result = "";
 		for(LoanEntry l : alLoan) {
 			if(l.getBook().getId() == book.getId()) {
