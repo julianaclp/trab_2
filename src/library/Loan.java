@@ -24,7 +24,7 @@ public class Loan implements Iterable<LoanEntry> {
 	public HashMap<String, Object> getActiveEntry(Book book) {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		for (LoanEntry l : alLoan) {
-			if(l.getBook().getId() == book.getId() && l.getDate(LoanEntry.RETURN).equals("NULL")) {
+			if(l.getBook().getId() == book.getId() && l.getDate(LoanEntry.RETURN).equals("--")) {
 				result.put("success", true);
 				result.put("data", l);
 				return result;
@@ -32,6 +32,21 @@ public class Loan implements Iterable<LoanEntry> {
 		}
 		result.put("success", false);
 		result.put("data", "Não existe empréstimo para esse livro");
+		return result;
+	}
+	
+	public String getHistory(Book book) {
+		String result = "";
+		for(LoanEntry l : alLoan) {
+			if(l.getBook().getId() == book.getId()) {
+				result += book + "\n";
+				result += "Emprestado por: " + l.getPerson() + "\n";
+				result += "Data de empréstimo: " + l.getDate(LoanEntry.BORROW) + "\n";
+				result += "Data de devolução: " + l.getDate(LoanEntry.RETURN) + "\n";
+				result += "\n";
+			}
+		}
+		if(result.length() == 0) result = "Não há empréstimos para esse livro.";
 		return result;
 	}
 	

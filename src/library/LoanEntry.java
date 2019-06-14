@@ -10,8 +10,8 @@ public class LoanEntry {
 	private GregorianCalendar returnDate;
 	private Book book;
 	private String person;
-	final static int BORROW = 1;
-	final static int RETURN = 2;
+	public final static int BORROW = 1;
+	public final static int RETURN = 2;
 	
 	public LoanEntry(Book book) {
 		this.book = book;
@@ -39,6 +39,7 @@ public class LoanEntry {
 			return response;
 		}
 		book.setStatus(Book.AVAILABLE);
+		setDate(new GregorianCalendar(), RETURN);
 		response.put("success", true);
 		response.put("message", "Livro devolvido com sucesso!");
 		return response;
@@ -46,9 +47,18 @@ public class LoanEntry {
 	
 	public String getDate(int action) {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		if(action == BORROW && borrowDate != null) return format.format(borrowDate);
-		if(action == RETURN && returnDate != null) return format.format(returnDate);
-		return "NULL";
+		if(action == BORROW && borrowDate != null) return format.format(borrowDate.getTime());
+		if(action == RETURN && returnDate != null) return format.format(returnDate.getTime());
+		return "--";
+	}
+	
+	public void setDate(GregorianCalendar date, int action) {
+		if(action == BORROW) borrowDate = date;
+		if(action == RETURN) returnDate = date;
+	}
+	
+	public String getPerson() {
+		return this.person;
 	}
 	
 	public Book getBook() {

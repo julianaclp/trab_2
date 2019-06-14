@@ -4,12 +4,12 @@ import java.util.Scanner;
 
 import library.*;
 
-public class Main {
+public class Main implements Helper {
 
 	private static Scanner k = new Scanner(System.in);
 	
-	public static void main(String[] args) {
-		int opt;
+	public static void main(String[] args) { 
+		int opt; 
 		Library lib = Library.getInstance();
 		lib.addBook(new Book("Pet Sematary",
 				"Stephen King",
@@ -52,7 +52,7 @@ public class Main {
 				break;
 			case 4:
 				System.out.println("Listar");
-				listBooks(lib);
+				listBooks(lib, loans);
 				pressToContinue();
 				break;
 			case 5:
@@ -99,16 +99,16 @@ public class Main {
 		Book b;
 		int type; 
 		while(true) {
-			type = Common.isNumberValidLoop(k, "Digite o tipo do livro: \n 1 - Acadêmico \n 2 - Literário");
+			type = Helper.isNumberValidLoop(k, "Digite o tipo do livro: \n 1 - Acadêmico \n 2 - Literário");
 			if(type == 1 || type == 2) break;
 			continue;
 		}
 		k.nextLine();
-		b = new Book(Common.isStringValidLoop(k, "Digite o título do livro"), type == 1 ? Book.Type.ACADEMIC : Book.Type.LITERARY);
-		b.setAuthor(Common.isStringValidLoop(k, "Digite o autor do livro"));
-		b.setReleaseYear(Common.isNumberValidLoop(k, "Digite o ano de lançamento do livro:"));
-		b.setAcquisitionYear(Common.isNumberValidLoop(k, "Digite o ano de aquisição do livro:"));
-		b.setPrice(Common.isFloatValidLoop(k, "Digite o valor de aquisição do livro"));
+		b = new Book(Helper.isStringValidLoop(k, "Digite o título do livro"), type == 1 ? Book.Type.ACADEMIC : Book.Type.LITERARY);
+		b.setAuthor(Helper.isStringValidLoop(k, "Digite o autor do livro"));
+		b.setReleaseYear(Helper.isNumberValidLoop(k, "Digite o ano de lançamento do livro:"));
+		b.setAcquisitionYear(Helper.isNumberValidLoop(k, "Digite o ano de aquisição do livro:"));
+		b.setPrice(Helper.isFloatValidLoop(k, "Digite o valor de aquisição do livro"));
 		l.addBook(b);
 		System.out.println(l.printLibrary());;
 	}
@@ -118,8 +118,8 @@ public class Main {
 		String person;
 		LoanEntry entry;
 		HashMap<String, Object> result;
-		person = Common.isStringValidLoop(k, "Digite o nome da pessoa que está emprestando o livro");
-		result = lib.searchBook(Common.isNumberValidLoop(k, "Digite a ID do livro que deseja emprestar: "));
+		person = Helper.isStringValidLoop(k, "Digite o nome da pessoa que está emprestando o livro");
+		result = lib.searchBook(Helper.isNumberValidLoop(k, "Digite a ID do livro que deseja emprestar: "));
 		if((boolean) result.get("exists") == false) {
 			System.out.println(result.get("message"));
 			return;
@@ -130,6 +130,7 @@ public class Main {
 			System.out.println(result.get("message"));
 			return;
 		}
+		entry.setDate(Helper.isDateValidLoop(k, "DATA DE EMPRÉSTIMO"), LoanEntry.BORROW);
 		System.out.println(result.get("message"));
 		l.newEntry(entry);
 		return;
@@ -138,7 +139,7 @@ public class Main {
 	public static void returnBook(Library lib, Loan l) {
 		HashMap<String, Object> result;
 		LoanEntry entry;
-		result = lib.searchBook(Common.isNumberValidLoop(k, "Digite a ID do livro que deseja devolver: "));
+		result = lib.searchBook(Helper.isNumberValidLoop(k, "Digite a ID do livro que deseja devolver: "));
 		if((boolean) result.get("exists") == false) {
 			System.out.println(result.get("message"));
 			return;
@@ -158,7 +159,7 @@ public class Main {
 		return;
 	}
 
-	public static void listBooks(Library lib) {
+	public static void listBooks(Library lib, Loan l) {
 		Scanner k = new Scanner(System.in);
 		int opt = 0;
 		System.out.println("1 - Listar livros de um determinado ano");
@@ -172,7 +173,7 @@ public class Main {
 				opt = k.nextInt();
 				switch(opt) {
 				case 1:
-					int year = Common.isNumberValidLoop(k, "Digite o ano de lançamento do livro");
+					int year = Helper.isNumberValidLoop(k, "Digite o ano de lançamento do livro");
 					System.out.println(lib.listByYear(year));
 					break;
 				case 2:
@@ -189,6 +190,14 @@ public class Main {
 					System.out.println(lib.getBooksByType());
 					break;
 				case 6:
+					k.nextLine();
+					int id = Helper.isNumberValidLoop(k, "Digite a ID do livro que deseja consultar: ");
+					HashMap<String, Object> result = lib.searchBook(id);
+					if((boolean) result.get("exists") == false) {
+						System.out.println(result.get("message"));
+						return;
+					}
+					System.out.println(l.getHistory((Book) result.get("book")));
 					break;
 				}
 				break;
@@ -205,7 +214,7 @@ public class Main {
 	}
 
 	public static void removeBook(Library lib) {
-		HashMap<String, Object> result = lib.searchBook(Common.isNumberValidLoop(k, "Digite a ID do livro que deseja excluir: "));
+		HashMap<String, Object> result = lib.searchBook(Helper.isNumberValidLoop(k, "Digite a ID do livro que deseja excluir: "));
 		if((boolean) result.get("exists") == false) {
 			System.out.println("Livro inexistente. Não foi possível excluir.");
 			return;
